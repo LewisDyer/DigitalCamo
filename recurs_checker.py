@@ -26,7 +26,7 @@ palettes = {
     "Basic": (['#FFFFFF', '#222222', '#444444', '#666666', '#888888', '#AAAAAA', '#CCCCCC'], '#EEEEEE'),
 }
 
-CHOSEN_PALETTE = "Digital Camo"
+CHOSEN_PALETTE = "Magma Bubbles"
 
 def random_colour():
     # generates a random hex colour code
@@ -116,8 +116,8 @@ def make_camo(x, y, size, square_size = 5):
     return canvas
 
 
-image_path = "mario_stock.jpg"
-mask = make_mask(image_path, threshold=125)
+image_path = "smash_logo_fire.png"
+mask = make_mask(image_path, threshold=8)
 
 canvas = make_camo(0, 0, mask.size)
 
@@ -128,7 +128,7 @@ print(mask_info)
 print(canvas_info)
 
 for x, y in np.ndindex(mask_info.shape):
-    canvas_info[x][y] = canvas_info[x][y] if mask_info[x][y] else ImageColor.getrgb('#FF0000')
+    canvas_info[x][y] = canvas_info[x][y] if mask_info[x][y] else ImageColor.getrgb('#000000')
 
 canvas = Image.fromarray(canvas_info, mode='RGB')
 
