@@ -26,7 +26,7 @@ palettes = {
     "Basic": (['#FFFFFF', '#222222', '#444444', '#666666', '#888888', '#AAAAAA', '#CCCCCC'], '#EEEEEE'),
 }
 
-CHOSEN_PALETTE = "Magma Bubbles"
+CHOSEN_PALETTE = "Digital Camo"
 
 def random_colour():
     # generates a random hex colour code
@@ -50,23 +50,24 @@ def make_mask(image_path, threshold=200):
        image, using the given threshold, and places it in /temporal/."""
 
     im_path = dirname(abspath(__file__))
-    print("------")
-    print(im_path)
     Path(abspath('.') + '\\masks\\').mkdir(exist_ok = True)
     mask = Image.open(im_path + '\\masks\\' + image_path)
-
-    fn = lambda x: 255 if x > threshold else 0
-
-    mask = mask.convert('L').point(fn, mode='1')
 
     Path(abspath('.') + '\\temporal\\').mkdir(exist_ok = True)
 
     mask_path = im_path + '\\temporal\\' + Path(image_path).resolve().stem + "__mask.png"
-    mask.save(mask_path)
+
+    if os.path.isfile(mask_path):
+        # Don't make a mask if we already have one with that name
+        mask = Image.open(mask_path)
+    else:
+        fn = lambda x: 255 if x > threshold else 0
+        mask = mask.convert('L').point(fn, mode='1')
+        mask.save(mask_path)
     return mask
     
 
-def make_camo(x, y, size, square_size = 5):
+def make_camo(x, y, size, square_size = 10):
     BG_COLOUR = '#000000'
     canvas = Image.new("RGB", size, BG_COLOUR)
     draw1 = ImageDraw.Draw(canvas)
@@ -116,19 +117,15 @@ def make_camo(x, y, size, square_size = 5):
     return canvas
 
 
-image_path = "smash_logo_fire.png"
-mask = make_mask(image_path, threshold=8)
+image_path = "game_and_watch.jpg"
+mask = make_mask(image_path, threshold=50)
 
 canvas = make_camo(0, 0, mask.size)
 
 mask_info, canvas_info = np.array(mask), np.array(canvas)
 
-print(mask_info)
-
-print(canvas_info)
-
 for x, y in np.ndindex(mask_info.shape):
-    canvas_info[x][y] = canvas_info[x][y] if mask_info[x][y] else ImageColor.getrgb('#000000')
+    canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else ImageColor.getrgb('#000000')
 
 canvas = Image.fromarray(canvas_info, mode='RGB')
 
