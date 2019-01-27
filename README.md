@@ -2,6 +2,9 @@
 
 DigitalCamo is a program that non-deterministically generates a pattern that, in some sense, looks like "digital camouflage". DigitalCamo also has support for defining your own custom colour palettes, along with image masks.
 
+![Sample output of an early version of DigitalCamo](https://user-images.githubusercontent.com/33163858/51806367-19bd5c80-2271-11e9-8473-bbc18a50aaeb.png)
+> Here's an indication of the sort of patterns the program generates. Subject to change!
+
 ---
 I originally started working on this project after starting to learn about _generative art_ - the technique of generating art, in part or in whole, using some sort of autonomous system. 
 
