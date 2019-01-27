@@ -26,7 +26,7 @@ palettes = {
     "Basic": (['#FFFFFF', '#222222', '#444444', '#666666', '#888888', '#AAAAAA', '#CCCCCC'], '#EEEEEE'),
 }
 
-CHOSEN_PALETTE = "Digital Camo"
+CHOSEN_PALETTE = "Magma Bubbles"
 
 def random_colour():
     # generates a random hex colour code
@@ -45,7 +45,7 @@ DEPTH_PROB = 0.6
 MAX_DEPTH = 4
 LAYERS = 2
 
-def make_mask(image_path, threshold=200):
+def make_mask(image_path, threshold=200, inverse = False):
     """Given the filename of an image in /masks/, creates a black and white version of that
        image, using the given threshold, and places it in /temporal/."""
 
@@ -55,21 +55,28 @@ def make_mask(image_path, threshold=200):
 
     Path(abspath('.') + '\\temporal\\').mkdir(exist_ok = True)
 
-    mask_path = im_path + '\\temporal\\' + Path(image_path).resolve().stem + "__mask.png"
+    if inverse:
+        mask_end = "i_mask.png"
+    else:
+        mask_end = "__mask.png"
+
+    mask_path = im_path + '\\temporal\\' + Path(image_path).resolve().stem + mask_end
 
     if os.path.isfile(mask_path):
         # Don't make a mask if we already have one with that name
         mask = Image.open(mask_path)
     else:
-        fn = lambda x: 255 if x > threshold else 0
+        if inverse:
+            fn = lambda x: 255 if not (x > threshold) else 0
+        else:
+            fn = lambda x: 255 if (x > threshold) else 0
         mask = mask.convert('L').point(fn, mode='1')
         mask.save(mask_path)
     return mask
     
 
 def make_camo(x, y, size, square_size = 10):
-    BG_COLOUR = '#000000'
-    canvas = Image.new("RGB", size, BG_COLOUR)
+    canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     draw1 = ImageDraw.Draw(canvas)
 
     def tile_board(start_x, start_y, squares, depth_prob = DEPTH_PROB, max_depth=MAX_DEPTH):
@@ -109,25 +116,27 @@ def make_camo(x, y, size, square_size = 10):
 
     data = np.array(canvas)
     
-    data[(data == (255, 255, 255)).all(axis = -1)] = ImageColor.getrgb(SLIVER_COLOUR)
+    data[(data == (255, 255, 255, 255)).all(axis = -1)] = ImageColor.getcolor(SLIVER_COLOUR, 'RGBA')
 
-    canvas = Image.fromarray(data, mode='RGB')
+    canvas = Image.fromarray(data, mode='RGBA')
     del draw1
 
     return canvas
 
 
-image_path = "game_and_watch.jpg"
-mask = make_mask(image_path, threshold=50)
+image_path = "smash_logo_fire.png"
+mask_a = make_mask(image_path, threshold=50, inverse=False)
+
+mask_b = make_mask(image_path, threshold=50, inverse=True)
 
 canvas = make_camo(0, 0, mask.size)
 
 mask_info, canvas_info = np.array(mask), np.array(canvas)
 
 for x, y in np.ndindex(mask_info.shape):
-    canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else ImageColor.getrgb('#000000')
+    canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else (0, 0, 0, 0)
 
-canvas = Image.fromarray(canvas_info, mode='RGB')
+canvas = Image.fromarray(canvas_info, mode='RGBA')
 
 Path(abspath('.') + '\\output\\').mkdir(exist_ok = True)
 
