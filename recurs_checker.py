@@ -125,13 +125,13 @@ def make_camo(x, y, size, square_size = 10):
 
 
 image_path = "smash_logo_fire.png"
-mask_a = make_mask(image_path, threshold=50, inverse=False)
+mask_a = make_mask(image_path, threshold=10, inverse=False)
 
-mask_b = make_mask(image_path, threshold=50, inverse=True)
+mask_b = make_mask(image_path, threshold=10, inverse=True)
 
-canvas = make_camo(0, 0, mask.size)
+canvas = make_camo(0, 0, mask_a.size)
 
-mask_info, canvas_info = np.array(mask), np.array(canvas)
+mask_info, canvas_info = np.array(mask_a), np.array(canvas)
 
 for x, y in np.ndindex(mask_info.shape):
     canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else (0, 0, 0, 0)

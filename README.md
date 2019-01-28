@@ -14,10 +14,6 @@ Bear with me for the time being - this repo is very much a work in progress. Mor
 
 Here's a list of changes and features I'm hoping to include in the near future, broadly speaking from earliest to latest:
 
-* Improve performance by checking if a mask already exists before recreating it
-
-* Implement support for transparency, making the outputted images more suitable for the likes of creating icons
-
 * Refactor the code into separate files for improved maintainability, including improved commenting
 
 * Improve the usability of the program with a command line interface
