@@ -26,7 +26,7 @@ palettes = {
     "Basic": (['#FFFFFF', '#222222', '#444444', '#666666', '#888888', '#AAAAAA', '#CCCCCC'], '#EEEEEE'),
 }
 
-CHOSEN_PALETTE = "Magma Bubbles"
+CHOSEN_PALETTE = "Basic"
 
 def random_colour():
     # generates a random hex colour code
@@ -124,12 +124,14 @@ def make_camo(x, y, size, square_size = 10):
     return canvas
 
 
-image_path = "smash_logo_fire.png"
-mask_a = make_mask(image_path, threshold=10, inverse=False)
+image_path = "ROB_logo.jpg"
+mask_a = make_mask(image_path, threshold=200, inverse=False)
 
-mask_b = make_mask(image_path, threshold=10, inverse=True)
+mask_b = make_mask(image_path, threshold=200, inverse=True)
 
 canvas = make_camo(0, 0, mask_a.size)
+
+
 
 mask_info, canvas_info = np.array(mask_a), np.array(canvas)
 
@@ -137,6 +139,28 @@ for x, y in np.ndindex(mask_info.shape):
     canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else (0, 0, 0, 0)
 
 canvas = Image.fromarray(canvas_info, mode='RGBA')
+
+CHOSEN_PALETTE = "Digital Camo"
+
+try:
+    COLOURS, SLIVER_COLOUR = palettes[CHOSEN_PALETTE]
+except KeyError:
+    COLOURS, SLIVER_COLOUR = ([random_colour() for i in range(5)], random_colour())
+    print("Palette not found, using random colours...")
+    print(COLOURS)
+    print(SLIVER_COLOUR)
+
+canvas_i = make_camo(0, 0, mask_b.size)
+
+
+mask_info, canvas_info = np.array(mask_b), np.array(canvas_i)
+
+for x, y in np.ndindex(mask_info.shape):
+    canvas_info[x][y] = canvas_info[x][y] if not mask_info[x][y] else (0, 0, 0, 0)
+
+canvas_i = Image.fromarray(canvas_info, mode='RGBA')
+
+canvas.paste(canvas_i, mask=canvas_i)
 
 Path(abspath('.') + '\\output\\').mkdir(exist_ok = True)
 
