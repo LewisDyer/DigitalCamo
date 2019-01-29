@@ -33,9 +33,13 @@ palettes = {
     "Basic": (['#444444', '#666666', '#888888', '#AAAAAA',], '#EEEEEE'),
 
     "Umbra Witch": (['#555566', '#333344', '#444455', '#334455', '#9988aa'], '#444455'),
+
+    "Persona 5": (['#F90100', '#C51C09', '#AD180A', '#390902'], '#000000'),
+
+    "Pop Black": (['#000000', '#323232', '#222222'], '#000000'),
 }
 
-CHOSEN_PALETTE = "Basic"
+CHOSEN_PALETTE = "Pop Black"
 
 def random_colour():
     # generates a random hex colour code
@@ -133,10 +137,10 @@ def make_camo(x, y, size, square_size = 10):
     return canvas
 
 
-image_path = "nu_13_i_think.jpg"
-mask_a = make_mask(image_path, threshold=100, inverse=False)
+image_path = "yusuke.png"
+mask_a = make_mask(image_path, threshold=75, inverse=False)
 
-mask_b = make_mask(image_path, threshold=100, inverse=True)
+mask_b = make_mask(image_path, threshold=75, inverse=True)
 
 canvas = make_camo(0, 0, mask_a.size)
 
@@ -149,7 +153,7 @@ for x, y in np.ndindex(mask_info.shape):
 
 canvas = Image.fromarray(canvas_info, mode='RGBA')
 
-CHOSEN_PALETTE = "Drowning"
+CHOSEN_PALETTE = "Basic"
 
 try:
     COLOURS, SLIVER_COLOUR = palettes[CHOSEN_PALETTE]
