@@ -1,3 +1,10 @@
+"""NOTE: The program is currently being refactored, and the functions of this file will be
+   split off into several different files. 
+
+   This is being kept around for now to test functionality, but it'll be no longer be updated
+   and may be removed in the future. Be careful! - 2019/01/29"""
+
+
 from PIL import ImageTk, Image, ImageDraw, ImageColor
 from pathlib import Path
 import os
