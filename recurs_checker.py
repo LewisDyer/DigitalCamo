@@ -13,7 +13,7 @@ import numpy as np
 """Feel free to define your own palettes! Palettes have a name, a list of colours (which are chosen from randomly when 
    colouring a square), and an additional colour used to fill in the cracks in the image."""
 palettes = {
-    "Digital Camo": (['#007400', '#006600', '#005600', '#004400'], '#00AF00'),
+    "Digital Camo": (['#007400', '#006600', '#005600'], '#00AF00'),
 
     "Magma Bubbles": (['#740000', '#660000', '#560000', '#210000', '#DD5812', '#DD5830'], '#AF0000'),
 
@@ -23,7 +23,9 @@ palettes = {
 
     "Google": (['#008744', '#0057e7', '#d62d20', '#ffa700'], '#ffffff'),
 
-    "Basic": (['#FFFFFF', '#222222', '#444444', '#666666', '#888888', '#AAAAAA', '#CCCCCC'], '#EEEEEE'),
+    "Basic": (['#444444', '#666666', '#888888', '#AAAAAA',], '#EEEEEE'),
+
+    "Umbra Witch": (['#555566', '#333344', '#444455', '#334455', '#9988aa'], '#444455'),
 }
 
 CHOSEN_PALETTE = "Basic"
@@ -124,10 +126,10 @@ def make_camo(x, y, size, square_size = 10):
     return canvas
 
 
-image_path = "ROB_logo.jpg"
-mask_a = make_mask(image_path, threshold=200, inverse=False)
+image_path = "nu_13_i_think.jpg"
+mask_a = make_mask(image_path, threshold=100, inverse=False)
 
-mask_b = make_mask(image_path, threshold=200, inverse=True)
+mask_b = make_mask(image_path, threshold=100, inverse=True)
 
 canvas = make_camo(0, 0, mask_a.size)
 
@@ -140,7 +142,7 @@ for x, y in np.ndindex(mask_info.shape):
 
 canvas = Image.fromarray(canvas_info, mode='RGBA')
 
-CHOSEN_PALETTE = "Digital Camo"
+CHOSEN_PALETTE = "Drowning"
 
 try:
     COLOURS, SLIVER_COLOUR = palettes[CHOSEN_PALETTE]
