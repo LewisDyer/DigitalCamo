@@ -36,10 +36,10 @@ palettes = {
 
     "Persona 5": (['#F90100', '#C51C09', '#AD180A', '#390902'], '#000000'),
 
-    "Pop Black": (['#000000', '#323232', '#222222'], '#000000'),
+    "Pop Black": (['#000000', '#323232', '#222222'], '#ffdd00'),
 }
 
-CHOSEN_PALETTE = "Pop Black"
+CHOSEN_PALETTE = "Persona 5"
 
 def random_colour():
     # generates a random hex colour code
@@ -56,7 +56,7 @@ except KeyError:
 
 DEPTH_PROB = 0.6
 MAX_DEPTH = 4
-LAYERS = 2
+LAYERS = 3
 
 def make_mask(image_path, threshold=200, inverse = False):
     """Given the filename of an image in /masks/, creates a black and white version of that
@@ -88,7 +88,7 @@ def make_mask(image_path, threshold=200, inverse = False):
     return mask
     
 
-def make_camo(x, y, size, square_size = 10):
+def make_camo(x, y, size, square_size = 30):
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     draw1 = ImageDraw.Draw(canvas)
 
@@ -101,8 +101,12 @@ def make_camo(x, y, size, square_size = 10):
                                (1,1), depth_prob = depth_prob * 0.5, max_depth = max_depth-1)
     
     def draw_square(start_x, start_y, size, layers):
-        randoms = [random.randrange(1, 4, 1) for l in range(layers)]
-        sizes = sorted([r / sum(randoms) for r in randoms], reverse=True)
+
+        randoms = [random.randrange(1, 3, 1) for l in range(layers)]
+        sizes = sorted([r / sum(randoms) + random.uniform(0, 0.3) for r in randoms], reverse=True)
+
+
+        print(sizes)
         ANCHORS = [(0, 0), #top left
                    (0, 1), #bottom left
                    (1, 0), #top right
@@ -137,10 +141,10 @@ def make_camo(x, y, size, square_size = 10):
     return canvas
 
 
-image_path = "yusuke.png"
-mask_a = make_mask(image_path, threshold=75, inverse=False)
+image_path = "meikle.png"
+mask_a = make_mask(image_path, threshold=100, inverse=False)
 
-mask_b = make_mask(image_path, threshold=75, inverse=True)
+mask_b = make_mask(image_path, threshold=100, inverse=True)
 
 canvas = make_camo(0, 0, mask_a.size)
 
@@ -153,7 +157,7 @@ for x, y in np.ndindex(mask_info.shape):
 
 canvas = Image.fromarray(canvas_info, mode='RGBA')
 
-CHOSEN_PALETTE = "Basic"
+CHOSEN_PALETTE = "Pop Black"
 
 try:
     COLOURS, SLIVER_COLOUR = palettes[CHOSEN_PALETTE]
